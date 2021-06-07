@@ -37,6 +37,7 @@ public:
     std::vector<std::vector<std::string> > getData(int skipRow);
     std::list<std::list<std::string>> getNumericalData();
     std::list<std::list<std::string>> getNumericalData(int skipRow);
+    std::list<std::list<double>> getNumericalDoubleData(std::string _filename, int _skipRow, std::string _sel_cols, int _del_type);
     std::list<std::list<std::string>> getNumericalData(std::string _filename, int _skipRow, std::string _sel_cols, int _del_type);
     std::list<std::list<std::string>> getNumericalData(std::string _filename, int _skipRow, std::string _sel_cols, std::string custom_delimeter);
 

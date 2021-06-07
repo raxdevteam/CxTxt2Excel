@@ -176,3 +176,39 @@ std::list<std::list<std::string>> TxtReader::getNumericalData(std::string _filen
     return dataList;
 }
 
+std::list<std::list<double>> TxtReader ::  getNumericalDoubleData(std::string _filename, int _skipRow, std::string _sel_cols, int _del_type)
+{
+    std::ifstream file(_filename);
+    std::list<std::list<double>> dataList;
+    std::string line = "";
+    long lineNumber=0;
+    std::vector<int>  cols = sel_cols_list(_sel_cols);
+    int col_count=cols.size();
+    //std::cout<<"XXX : "<<custom_delimeter<<std::endl;
+    /*if(_delim_type>2)
+    {
+        delimeter[3]=custom_delimeter;
+
+    }*/
+    // Iterate through each line and split the content using delimeter
+    while (getline(file, line))
+    {
+        if(lineNumber>=_skipRow)
+        {
+            std::vector<std::string> data;
+            boost::algorithm::split(data, line, boost::is_any_of(delimeter[_del_type]));
+            std::list<double> ndata;
+            for(int i=0; i<col_count; i++)
+            {
+                ndata.push_back(atof(data[cols[i]].c_str()));
+            }
+            dataList.push_back(ndata);
+        }
+        lineNumber++;
+
+    }
+    // Close the File
+    file.close();
+    return dataList;
+}
+

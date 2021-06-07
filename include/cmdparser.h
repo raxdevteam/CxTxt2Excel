@@ -14,6 +14,9 @@ class CmdParser
 {
 public:
     CmdParser();
+    void test();
+    void createDir(std::string path);
+    void help_cmd();
     void process_command(int argc, char *argv[]);
 };
 
