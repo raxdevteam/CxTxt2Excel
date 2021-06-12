@@ -7,6 +7,10 @@
 #include <string>
 #include <iostream>
 
+#include "fileutil.h"
+#include "txtreader.h"
+#include "consoleprint.h"
+
 class Txt2Xcel
 {
 public:
@@ -19,11 +23,11 @@ public:
     void wxExData2ManyEx();
     void wxExData2ManySx();
     void wxExData2OneEx();
-    void wxExData2OneSx();
+    void wxExData2OneSx(std::string _file_name);
     void writeExcelData(std::string _title, std::list<std::list<double>> &_dataList);
     void writeExcelData(std::vector<std::vector<double>> &_dataList);
 
-    void createExcel();
+    void createExcel(std::string title, std::vector<std::vector<double>> _dataRowList);
     void txt_2_xcel(std::list<std::list<std::string>> data_list, std::vector<int> col_list);
     //void createReport();
     ~Txt2Xcel();

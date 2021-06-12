@@ -35,9 +35,9 @@ void CmdParser :: process_command(int argc, char **argv)
             }else{
                 dataList = read.getNumericalData(argv[1], skipRow, sel_col, delimeter);
                 Txt2Xcel t2e;
-                t2e.txt_2_xcel(dataList, read.sel_cols_list(sel_col));
+                t2e.txt_2_xcel(dataList, read.sel_col_index_list(sel_col));
                }
-            ConsolePrint::print_txt_file_data(read.sel_cols_list(sel_col).size(), dataList);
+            ConsolePrint::print_txt_file_data(read.sel_col_index_list(sel_col).size(), dataList);
 
         }else{
             std::cout<<"Invalid file name or file path"<<std::endl;
@@ -86,6 +86,6 @@ void CmdParser :: test()
 {
     Txt2Xcel t2x;
     TxtReader trd;
-    std::list<std::list<double>> dataList=trd.getNumericalDoubleData("./1.txt",6,"1,2,3",0);
+    std::list<std::list<double>> dataList=trd.parseTxt2Number_LIST("./1.txt",6,"1,2,3",0);
     t2x.writeExcelData("1", dataList);
 }

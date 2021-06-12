@@ -12,11 +12,20 @@
 
 int main(int argc, char* argv[])
 {
+   /*FileUtil fu;
+   /*std::cout<<"--------File path list----------"<<std::endl;
+   std::list<std::string> filePathList=fu.show_file_path(".txt");
+   for(std::string fileName : filePathList) {
+       std::cout<<fileName<<std::endl;
+   }
+   std::cout<<"\n---File path-------"<<std::endl;
+   fu.get_file_directory(argv[1]);
     /*CmdParser cmd;
-              cmd.process_command(argc, argv);*/
-
+              cmd.process_command(argc, argv);
+*/
     Txt2Xcel t2x;
-     t2x.createExcel();
+     t2x.wxExData2OneSx(argv[1]);
+
 
 /*CmdParser cmd;
 cmd.test();

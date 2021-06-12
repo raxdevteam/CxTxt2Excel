@@ -197,10 +197,80 @@ void Txt2Xcel :: add_doc_properties(/*lxw_workbook *wb*/)
 
 
 
-void Txt2Xcel :: createExcel()
+void Txt2Xcel :: createExcel(std::string _title, std::vector<std::vector<double>> _dataRowList)
 {
-    workbook   = workbook_new("Report.xlsx");
-    worksheet  = workbook_add_worksheet(workbook, "Outline Columns");
+
+
+
+    //for(int processingFileId=1;processingFileId<fileCount; processingFileId++){
+
+    //std::string sn=std::to_string(processingFileId);
+    std::cout<<"Col title :  "<<_title<<std::endl;
+    const char *groupTitle=_title.c_str(); //replace with filename without extesion
+    worksheet_merge_range(worksheet, 0, grpColStart, 0, grpColEnd-1, groupTitle, merge_format);
+    worksheet_set_row(worksheet, 0, LXW_DEF_ROW_HEIGHT, bold);
+
+    //std::vector<std::vector<double>> dataRowList=txtRdr.parseTxt2Number_VECT(_fileNamex,6,"1,2,3", 0);
+    int rowId=1, colId=0;
+
+    for(std::vector<double> dataCol : _dataRowList)
+    {
+        for(int col=grpColStart; col<grpColEnd; col++)
+        {
+            std::cout<<"Rx: "<<rowId<<" Cx: "<<col<<" Cz: "<<colId<<" Dx: "<<dataCol[colId]<<" ";
+            worksheet_write_number(worksheet, rowId, col, dataCol[colId],  NULL);
+            colId++;
+        }
+        std::cout<<std::endl;
+        rowId++;colId=0;
+    }
+
+    /*
+    for(rowId=1; rowId<40; rowId++)
+    {
+        for(colId=grpColStart; colId<grpColEnd; colId++)
+        {
+            worksheet_write_number(worksheet, rowId, colId, rowId*colId,  NULL);
+
+        }
+    }*/
+    //rowId=0;colId=0;
+    std::cout<<"Processing file id : "<<processingFileId<<std::endl;
+    if(processingFileId==1 || processingFileId==fileCount){
+            std::cout<<"Grp Sx : "<<grpColStart<<" Ex : "<<grpColEnd<<std::endl;
+            worksheet_set_column_opt(worksheet, grpColStart, grpColEnd-2,  5, NULL, &col_options);
+
+        }else{
+        std::cout<<"Grp Sxm : "<<grpColStart<<" Exm : "<<grpColEnd<<std::endl;
+
+        worksheet_set_column_opt(worksheet, grpColStart, grpColEnd-2,  5, NULL, &col_options);
+       }
+        grpColStart+=tcc;grpColEnd+=tcc;processingFileId++;
+
+    //}
+
+
+}
+
+void Txt2Xcel :: wxExData2OneSx(std::string _file_name)
+{
+    dirPath="./data";
+    fileName="./data/data.txt";
+    skipRowNo=6;
+    col.push_back(1);col.push_back(2),col.push_back(3);
+    colSeparator=",";
+    colDif=1;
+    grpColStart=0;//1
+    colCount=col.size();
+    tcc=colDif+colCount;
+    grpColEnd=colCount;//+1
+    std::cout<<"Col div : "<<colDif<<" count : "<<colCount<<std::endl;
+
+    std::string file_directory=FileUtil::get_file_directory(_file_name);
+    file_directory.append("Report.xlsx");
+
+    workbook   = workbook_new(file_directory.c_str());//"Report.xlsx");
+    worksheet  = workbook_add_worksheet(workbook, "Data");
 
     /* Set the properties in the workbook. */
     add_doc_properties();
@@ -221,55 +291,31 @@ void Txt2Xcel :: createExcel()
     /* Increase the cell size of the merged cells to highlight the formatting. */
     worksheet_set_column(worksheet, 1, 3, 12, NULL);
 
-    dirPath="./data";
-    fileName="./data/data.txt";
-    skipRowNo=6;
-    col.push_back(1);col.push_back(2),col.push_back(3);
-    colSeparator=",";
-    colDif=1;
-    grpColStart=0;//1
-    colCount=col.size();
-    tcc=colDif+colCount;
-    grpColEnd=colCount;//+1
-    std::cout<<"Col div : "<<colDif<<" count : "<<colCount<<std::endl;
 
     //lxw_row_col_options options_0 = {.hidden = 0, .level = 1, .collapsed = 0};
     col_options = {.hidden = 0, .level = 1, .collapsed = 1};
     //lxw_row_col_options options_2 = {.hidden = 0, .level = 1, .collapsed = 2};
 
-    int fileCount=15;
-    for(int processingFileId=1;processingFileId<fileCount; processingFileId++){
 
-    std::string sn=std::to_string(processingFileId);
-    int rowId=0, colId=0; const char *groupTitle=sn.c_str(); //replace with filename without extesion
-    worksheet_merge_range(worksheet, 0, grpColStart, 0, grpColEnd-1, groupTitle, merge_format);
-    worksheet_set_row(worksheet, 0, LXW_DEF_ROW_HEIGHT, bold);
-
-    for(rowId=1; rowId<40; rowId++)
+    std::list<std::string> file_path_list=FileUtil::read_directory_file_path(_file_name);
+    std::vector<std::string> file_title_list=FileUtil::get_file_name_list_without_extension(_file_name);
+    int fileCount=file_path_list.size();
+    std::cout<<"File cont : "<<fileCount<<std::endl;
+    std::cout<<"File name cont : "<<file_title_list.size()<<std::endl;
+    processingFileId=1;
+    TxtReader txtRdr;
+    for(std::string file_name : file_path_list)
     {
-        for(colId=grpColStart; colId<grpColEnd; colId++)
-        {
-            worksheet_write_number(worksheet, rowId, colId, rowId*colId,  NULL);
+        std::cout<<"Processing file : "<<file_name<<std::endl;
+        std::vector<std::vector<double>> dataList=txtRdr.parseTxt2Number_VECT(file_name,6,"1,2,3", 0);
+        ConsolePrint::print_txt_file_data_vect(3, dataList);
 
-        }
-    }
-    //rowId=0;colId=0;
-    if(processingFileId==1 || processingFileId==fileCount){
-            std::cout<<"Grp Sx : "<<grpColStart<<" Ex : "<<grpColEnd<<std::endl;
-            worksheet_set_column_opt(worksheet, grpColStart, grpColEnd-2,  5, NULL, &col_options);
-
-        }else{
-        std::cout<<"Grp Sxm : "<<grpColStart<<" Exm : "<<grpColEnd<<std::endl;
-
-        worksheet_set_column_opt(worksheet, grpColStart, grpColEnd-2,  5, NULL, &col_options);
-       }
-        grpColStart+=tcc;grpColEnd+=tcc;//processingFileId++;
-
+        createExcel(file_title_list[processingFileId-1], dataList);//txtRdr.parseTxt2Number_VECT(file_name,6,"1,2,3", 0));
     }
 
     workbook_close(workbook);
-}
 
+}
 
 void Txt2Xcel ::  txt_2_xcel(std::list<std::list<std::string>> data_list, std::vector<int> col_list)
 {

@@ -32,14 +32,15 @@ public:
     { }*/
 
     // Function to fetch data from a CSV File
-    std::vector<int> sel_cols_list(std::string cols);
+    std::vector<int> sel_col_index_list(std::string cols);
     std::vector<std::vector<std::string> > getData();
     std::vector<std::vector<std::string> > getData(int skipRow);
     std::list<std::list<std::string>> getNumericalData();
     std::list<std::list<std::string>> getNumericalData(int skipRow);
-    std::list<std::list<double>> getNumericalDoubleData(std::string _filename, int _skipRow, std::string _sel_cols, int _del_type);
+    std::list<std::list<double>> parseTxt2Number_LIST(std::string _filename, int _skipRow, std::string _sel_cols, int _del_type);
     std::list<std::list<std::string>> getNumericalData(std::string _filename, int _skipRow, std::string _sel_cols, int _del_type);
     std::list<std::list<std::string>> getNumericalData(std::string _filename, int _skipRow, std::string _sel_cols, std::string custom_delimeter);
+    std::vector<std::vector<double>> parseTxt2Number_VECT(std::string _filename, int _skipRow, std::string _sel_cols, int _del_type);
 
     ~TxtReader();
 };

@@ -38,6 +38,51 @@ void ConsolePrint :: print_txt_file_data(int max_cols, std::list<std::list<std::
         std::cout<<"----------------------------"<<std::endl;
 }
 
+void ConsolePrint :: print_txt_file_data_vect(int max_cols, std::vector<std::vector<double>> dataList)
+{
+    std::cout<<"Printing data..."<<std::endl;
+    std::cout<<"----------------------------"<<std::endl;
+        // Print the content of row by row on screen
+        // int col_i=1;
+         std::cout<<"Col size : "<<max_cols<<std::endl;
+         std::cout<<"Data size : "<<dataList.size()<<std::endl;
+         std::cout<<"----------------------------"<<std::endl;
+
+         for(std::vector<double> dataCol : dataList)
+         {
+             for(int i=0;i<max_cols;i++)
+             {
+                 if(i==max_cols-1)
+                   std::cout<<dataCol[i];
+                 else
+                   std::cout<<dataCol[i]<<" ";
+             }
+         }
+
+
+        /*for(std::list<std::string> data : dataList)
+        {
+                //std::cout<<data<<" , "<<data[1]<<" , "<<data[2];
+            for(std::string val : data)
+            {
+                //if(col_i==colList[col_i]){
+                    if(col_i==max_cols)
+                    {
+                       std::cout<<val;
+                       col_i=1;
+                    }
+
+                    else{
+                        std::cout<<val<<" , ";
+                        col_i++;
+                    }
+                //}
+            }
+            std::cout<<std::endl;
+        }*/
+        std::cout<<"----------------------------"<<std::endl;
+}
+
 
 /*std::vector<string> col;
 std::string cols="1,2,3";
