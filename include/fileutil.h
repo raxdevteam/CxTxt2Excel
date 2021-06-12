@@ -14,14 +14,12 @@ namespace fs = std::experimental::filesystem;
 class FileUtil
 {
 public:
-    FileUtil();
-    bool is_file_exists(char *file_path);
+    static bool is_file_exists(char *file_path);
     static std::list<std::string> show_file_path(std::string fileExtension);
     static std::string get_file_directory(std::string file_name);
     static std::list<std::string> read_directory_file_path(std::string _file_name);
     static std::vector<std::string> get_file_name_list_without_extension(std::string _file_name);
 
-    void CxFs();
 };
 
 #endif // FILEUTIL_H

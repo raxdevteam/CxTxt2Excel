@@ -24,15 +24,9 @@ private:
 public:
     TxtReader();
 
-    /*TxtReader(std::string _filename, std::string _delimeter = ",") :
-              filename(_filename), delimeter(_delimeter)
-    { }
-    TxtReader(std::string _filename, int _skipRow, std::string _sel_cols, std::string _delimeter = ",") :
-              filename(_filename), skipRow(_skipRow), sel_cols(_sel_cols), delimeter(_delimeter)
-    { }*/
-
     // Function to fetch data from a CSV File
-    std::vector<int> sel_col_index_list(std::string cols);
+    static std::vector<int> sel_col_index_vect(std::string cols);
+    static std::list<int> sel_col_index_list(std::string cols);
     std::vector<std::vector<std::string> > getData();
     std::vector<std::vector<std::string> > getData(int skipRow);
     std::list<std::list<std::string>> getNumericalData();

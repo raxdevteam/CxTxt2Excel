@@ -10,10 +10,28 @@ TxtReader::~TxtReader()
 
 }
 
-std::vector<int> TxtReader :: sel_col_index_list(std::string cols)
+std::vector<int> TxtReader :: sel_col_index_vect(std::string cols)
 {
     std::string defdelim=",";
     std::vector<int> col;
+    std::stringstream s_stream(cols); //create string stream from the string
+    //int sum=0,i=0;
+    while(s_stream.good()){
+        std::string colId;
+        std::getline(s_stream, colId, ','); //get first string delimited by comma
+        col.push_back(atoi(colId.c_str()));
+        //sum+=col[i];i++;
+        //std::cout<<" "<<colId;
+    }
+    //std::cout<<"\nSum : "<<sum<<std::endl;
+
+    return col;
+}
+
+std::list<int> TxtReader :: sel_col_index_list(std::string cols)
+{
+    std::string defdelim=",";
+    std::list<int> col;
     std::stringstream s_stream(cols); //create string stream from the string
     //int sum=0,i=0;
     while(s_stream.good()){
@@ -115,7 +133,7 @@ std::list<std::list<std::string>> TxtReader::getNumericalData(std::string _filen
     std::list<std::list<std::string>> dataList;
     std::string line = "";
     long lineNumber=0;
-    std::vector<int>  cols = sel_col_index_list(_sel_cols);
+    std::vector<int>  cols = sel_col_index_vect(_sel_cols);
     int col_count=cols.size();
 
     // Iterate through each line and split the content using delimeter
@@ -146,7 +164,7 @@ std::list<std::list<std::string>> TxtReader::getNumericalData(std::string _filen
     std::list<std::list<std::string>> dataList;
     std::string line = "";
     long lineNumber=0;
-    std::vector<int>  cols = sel_col_index_list(_sel_cols);
+    std::vector<int>  cols = sel_col_index_vect(_sel_cols);
     int col_count=cols.size();
     //std::cout<<"XXX : "<<custom_delimeter<<std::endl;
     /*if(_delim_type>2)
@@ -182,7 +200,7 @@ std::list<std::list<double>> TxtReader ::  parseTxt2Number_LIST(std::string _fil
     std::list<std::list<double>> dataList;
     std::string line = "";
     long lineNumber=0;
-    std::vector<int>  cols = sel_col_index_list(_sel_cols);
+    std::vector<int>  cols = sel_col_index_vect(_sel_cols);
     int col_count=cols.size();
     //std::cout<<"XXX : "<<custom_delimeter<<std::endl;
     /*if(_delim_type>2)
@@ -218,7 +236,7 @@ std::vector<std::vector<double>> TxtReader ::  parseTxt2Number_VECT(std::string 
     std::vector<std::vector<double>> dataList;
     std::string line = "";
     long lineNumber=0;
-    std::vector<int>  cols = sel_col_index_list(_sel_cols);
+    std::vector<int>  cols = sel_col_index_vect(_sel_cols);
     int col_count=cols.size();
     //std::cout<<"XXX : "<<custom_delimeter<<std::endl;
     /*if(_delim_type>2)

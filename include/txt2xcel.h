@@ -2,11 +2,11 @@
 #define TXT2XCEL_H
 
 #include <xlsxwriter.h>
-#include <list>
+/*#include <list>
 #include <vector>
 #include <string>
 #include <iostream>
-
+*/
 #include "fileutil.h"
 #include "txtreader.h"
 #include "consoleprint.h"
@@ -15,19 +15,19 @@ class Txt2Xcel
 {
 public:
     Txt2Xcel();
-    Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, std::string _colSeparator);
-    Txt2Xcel(std::string _dirPath,  std::string _fileName,  std::string _fileExtension, int _skipRowNo, std::list<int> _col, int _colDif, std::string _colSeparator);
-    Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, int _colDif, std::string _colSeparator);
-    std::list<std::list<double>> parseTextFile(std::string _filename);
+    Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, int _colSeparatorType);
+    Txt2Xcel(std::string _fileName, int _skipRowNo, std::string _cols, int _colDif, int _colSeparatorType);
+    Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, int _colDif, int _colSeparatorType);
 
     void wxExData2ManyEx();
     void wxExData2ManySx();
     void wxExData2OneEx();
-    void wxExData2OneSx(std::string _file_name);
+    //Write many file to one sheet
+    void wx_mfx_2_one_sx(/*std::string _file_name*/);
     void writeExcelData(std::string _title, std::list<std::list<double>> &_dataList);
-    void writeExcelData(std::vector<std::vector<double>> &_dataList);
+    //void writeExcelData(std::vector<std::vector<double>> &_dataList);
 
-    void createExcel(std::string title, std::vector<std::vector<double>> _dataRowList);
+    void write_excel_data(std::string title, std::vector<std::vector<double>> _dataRowList);
     void txt_2_xcel(std::list<std::list<std::string>> data_list, std::vector<int> col_list);
     //void createReport();
     ~Txt2Xcel();
@@ -35,10 +35,7 @@ private:
     void init_excel_file();
     void add_doc_cust_prop(/*lxw_workbook *workbook*/);
     void add_doc_properties(/*lxw_workbook *wb*/);
-    void writeFile(std::string _filename, std::list<std::list<double>> _dataList);
-    std::string readFile(std::string _filename);
-    void fileNamePathListNumbX();
-    void fileNamePathList();
+    std::list<std::list<double>> parseTextFile(std::string _filename);
 
 private:
     lxw_workbook  *workbook;
@@ -59,9 +56,10 @@ private:
     int processingFileId;
     int skipRowNo;
     std::list<int> col;
+    std::string cols;
     std::vector<std::vector<int>> cellRange;
     std::vector<std::string> filePathList;
-    std::string colSeparator;
+    int colSeparatorType;
     std::string dirPath;
     std::string fileName;
     std::string fileExtension;

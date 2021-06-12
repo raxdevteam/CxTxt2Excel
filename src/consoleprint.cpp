@@ -1,10 +1,5 @@
 #include "consoleprint.h"
 
-ConsolePrint::ConsolePrint()
-{
-
-}
-
 void ConsolePrint :: print_txt_file_data(int max_cols, std::list<std::list<std::string>> dataList)
 {
     std::cout<<"Printing data..."<<std::endl;
@@ -83,44 +78,6 @@ void ConsolePrint :: print_txt_file_data_vect(int max_cols, std::vector<std::vec
         std::cout<<"----------------------------"<<std::endl;
 }
 
-
-/*std::vector<string> col;
-std::string cols="1,2,3";
-std::string delimeter=",";
-boost::algorithm::split(col, cols, boost::is_any_of(delimeter));
-std::cout<<"Cols : "<<cols<<std::endl;
-std::cout<<"Count : "<<col.size();
-for(std::string cid : col) {
-    std::cout<<" "<<cid;
-}*/
- //CsvReader reader("data.txt");
-
-/* std::list<std::list<std::string>> dataList = reader.getNumericalData(1);
- int sel_col [] = {1,2};
-// Print the content of row by row on screen
- int max_cols=4,col_i=0;
-for(std::list<std::string> data : dataList)
-{
-        //std::cout<<data<<" , "<<data[1]<<" , "<<data[2];
-    for(std::string val : data)
-    {
-        if(col_i==sel_col[col_i]){
-            if(col_i==max_cols)
-            {
-               std::cout<<val;
-               col_i=1;
-            }
-
-            else{
-                std::cout<<val<<" , ";
-                col_i++;
-            }
-        }
-
-
-    }
-    std::cout<<std::endl;
-}*/
 
 /* std::vector<std::vector<std::string> > dataList = reader.getData();
 // Print the content of row by row on screen
