@@ -19,7 +19,7 @@ public:
     static std::string get_file_directory(std::string file_name);
     static std::list<std::string> read_directory_file_path(std::string _file_name);
     static std::vector<std::string> get_file_name_list_without_extension(std::string _file_name);
-
+    static void make_directory(std::string _directory_name);
 };
 
 #endif // FILEUTIL_H

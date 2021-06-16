@@ -2,6 +2,7 @@
 #define TXT2XCEL_H
 
 #include <xlsxwriter.h>
+#include <time.h>
 /*#include <list>
 #include <vector>
 #include <string>
@@ -15,27 +16,22 @@ class Txt2Xcel
 {
 public:
     Txt2Xcel();
-    Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, int _colSeparatorType);
+    Txt2Xcel(std::string _fileName, int _skipRowNo, std::string _cols, int _colSeparatorType);
     Txt2Xcel(std::string _fileName, int _skipRowNo, std::string _cols, int _colDif, int _colSeparatorType);
-    Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, int _colDif, int _colSeparatorType);
-
-    void wxExData2ManyEx();
-    void wxExData2ManySx();
-    void wxExData2OneEx();
+    Txt2Xcel(int opt, std::string _fileName, int _skipRowNo, std::string _cols, int _colSeparatorType);
+    void wx_mfx_2_msx();
+    void wx_of_2_ex();
+    void wx_mfx_2_mex();
     //Write many file to one sheet
     void wx_mfx_2_one_sx(/*std::string _file_name*/);
-    void writeExcelData(std::string _title, std::list<std::list<double>> &_dataList);
-    //void writeExcelData(std::vector<std::vector<double>> &_dataList);
 
     void write_excel_data(std::string title, std::vector<std::vector<double>> _dataRowList);
     void txt_2_xcel(std::list<std::list<std::string>> data_list, std::vector<int> col_list);
-    //void createReport();
     ~Txt2Xcel();
 private:
-    void init_excel_file();
-    void add_doc_cust_prop(/*lxw_workbook *workbook*/);
-    void add_doc_properties(/*lxw_workbook *wb*/);
-    std::list<std::list<double>> parseTextFile(std::string _filename);
+    char* get_filename_timeStamp();
+    void add_doc_cust_prop();
+    void add_doc_properties();
 
 private:
     lxw_workbook  *workbook;

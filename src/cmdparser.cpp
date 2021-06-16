@@ -7,7 +7,7 @@ CmdParser::CmdParser()
 
 void CmdParser :: process_command(int argc, char *argv[])
 {
-    if(argc>1 && (argc-1==5))
+    if(argc>1 && (argc-1==4))
     {
         //Cmd : ./app file_name row2Skip sel_col delim_type [custom {if delim_type>2}]
         std::cout<<"App : "<<argv[0]<<std::endl;
@@ -23,15 +23,18 @@ void CmdParser :: process_command(int argc, char *argv[])
             std::string sel_col=argv[3];
             std::cout<<"Selected cols id : "<<sel_col<<std::endl;
 
-            int col_diff=atoi(argv[4]);
-            std::cout<<"Col diff: "<<col_diff<<std::endl;
+            //int col_diff=atoi(argv[4]);
+            //std::cout<<"Col diff: "<<col_diff<<std::endl;
 
-            int delimeter_opt=atoi(argv[5]);
+            int delimeter_opt=atoi(argv[4]);
             std::cout<<"Delimeter Type: "<<delimeter_opt<<std::endl;
             //std::string delimeter_type[3]={",", "\t", " "};
 
-            Txt2Xcel txt_xl(filename, skipRow, sel_col, col_diff, delimeter_opt);
-                     txt_xl.wx_mfx_2_one_sx();
+            Txt2Xcel txt_xl(0,filename, skipRow, sel_col, delimeter_opt);
+                     txt_xl.wx_mfx_2_mex();
+                    // txt_xl.wx_of_2_ex();
+                     //filename, skipRow, sel_col, col_diff, delimeter_opt);
+                     //txt_xl.wx_mfx_2_one_sx();
 
         }else{
             std::cout<<"Invalid file name or file path"<<std::endl;

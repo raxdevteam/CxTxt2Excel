@@ -1,9 +1,5 @@
 #include "fileutil.h"
 
-FileUtil::FileUtil()
-{
-
-}
 
 bool FileUtil :: is_file_exists(char *file_path)
 {
@@ -40,6 +36,12 @@ bool FileUtil :: is_file_exists(char *file_path)
     }
 
     return status;
+}
+
+void FileUtil :: make_directory(std::string _directory_name)
+{
+    //fs::path dir{_directory_name};
+    fs::create_directory(_directory_name);
 }
 
 std::list<std::string> FileUtil :: show_file_path(std::string fileExtension)

@@ -11,20 +11,29 @@ Txt2Xcel::~Txt2Xcel()
 }
 
 
-Txt2Xcel::Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, int _colSeparatorType)
+Txt2Xcel::Txt2Xcel(std::string _fileName,  int _skipRowNo, std::string _cols, int _colSeparatorType)
 {
-    dirPath=_dirPath;
     fileName=_fileName;
     skipRowNo=_skipRowNo;
-    col=_col;
+    cols=_cols;
+    col=TxtReader::sel_col_index_list(cols);
     colSeparatorType=_colSeparatorType;
+    grpColStart=0;//1
     colCount=col.size();
-    grpColEnd=colCount+1;
+    grpColEnd=colCount;//+1
 
-    //setFileProperty();
+    std::string file_directory=FileUtil::get_file_directory(fileName);
+    char* fn=get_filename_timeStamp();
+    file_directory.append(fn).append(".xlsx");
+    std::cout<<"Converted file path : "<<file_directory<<std::endl;
 
-    std::cout<<"Dir path:"<<dirPath;
-    init_excel_file();
+    workbook   = workbook_new(file_directory.c_str());//"Report.xlsx");
+    worksheet  = workbook_add_worksheet(workbook, "Data");
+
+    /* Set the properties in the workbook. */
+    add_doc_properties();
+    add_doc_cust_prop();
+
 }
 Txt2Xcel::Txt2Xcel(std::string _fileName,  int _skipRowNo, std::string _cols, int _colDif, int _colSeparatorType)
 {
@@ -41,7 +50,9 @@ Txt2Xcel::Txt2Xcel(std::string _fileName,  int _skipRowNo, std::string _cols, in
     std::cout<<"Col div : "<<colDif<<" count : "<<colCount<<std::endl;
 
     std::string file_directory=FileUtil::get_file_directory(fileName);
-    file_directory.append("Report.xlsx");
+    //file_directory.append("Report.xlsx");
+    char* fn=get_filename_timeStamp();
+    file_directory.append(fn).append(".xlsx");
     std::cout<<"Converted file path : "<<file_directory<<std::endl;
 
     workbook   = workbook_new(file_directory.c_str());//"Report.xlsx");
@@ -52,21 +63,29 @@ Txt2Xcel::Txt2Xcel(std::string _fileName,  int _skipRowNo, std::string _cols, in
     add_doc_cust_prop();
 
 }
-Txt2Xcel::Txt2Xcel(std::string _dirPath, std::string _fileName, int _skipRowNo, std::list<int> _col, int _colDif, int _colSeparatorType)
+Txt2Xcel::Txt2Xcel(int opt, std::string _fileName,  int _skipRowNo, std::string _cols, int _colSeparatorType)
 {
-    dirPath=_dirPath;
     fileName=_fileName;
     skipRowNo=_skipRowNo;
-    col=_col;
+    cols=_cols;
+    col=TxtReader::sel_col_index_list(cols);
     colSeparatorType=_colSeparatorType;
-    colDif=_colDif;
-    grpColStart=1;//1
+    grpColStart=opt;//0;//1
     colCount=col.size();
-    tcc=colDif+colCount;
     grpColEnd=colCount;//+1
-    std::cout<<"Col div : "<<colDif<<"count : "<<colCount;
- //   setFileProperty();
-    init_excel_file();
+
+    std::string file_directory=FileUtil::get_file_directory(fileName);
+    char* fn=get_filename_timeStamp();
+    file_directory.append(fn);
+    dirPath=file_directory;
+    std::cout<<"Converted file path : "<<file_directory<<std::endl;
+
+/*    workbook   = workbook_new(file_directory.c_str());//"Report.xlsx");
+    worksheet  = workbook_add_worksheet(workbook, "Data");
+    add_doc_properties();
+    add_doc_cust_prop();
+    */
+
 }
 
 void Txt2Xcel :: add_doc_cust_prop(/*lxw_workbook *workbook*/)
@@ -80,40 +99,6 @@ void Txt2Xcel :: add_doc_cust_prop(/*lxw_workbook *workbook*/)
     workbook_set_custom_property_number  (workbook, "Reference number", 1.2345);
     workbook_set_custom_property_boolean (workbook, "Has Review",       1);
     workbook_set_custom_property_boolean (workbook, "Signed off",       0);
-
-}
-
-void Txt2Xcel :: init_excel_file()
-{
-    workbook   = workbook_new("Report.xlsx");
-    worksheet  = workbook_add_worksheet(workbook, "Outline Columns");
-
-    /* Set the properties in the workbook. */
-    add_doc_properties();
-    add_doc_cust_prop();
-
-    bold = workbook_add_format(workbook);
-    format_set_bold(bold);
-
-    merge_format = workbook_add_format(workbook);
-
-    /* Configure a format for the merged range. */
-    format_set_align(merge_format, LXW_ALIGN_CENTER);
-    format_set_align(merge_format, LXW_ALIGN_VERTICAL_CENTER);
-    format_set_bold(merge_format);
-    format_set_bg_color(merge_format, LXW_COLOR_YELLOW);
-    format_set_border(merge_format, LXW_BORDER_THIN);
-
-    /* Increase the cell size of the merged cells to highlight the formatting. */
-    worksheet_set_column(worksheet, 1, 3, 12, NULL);
-
-
-    /*
-     * Example 3: Create a worksheet with outlined columns.
-     */
-    //lxw_row_col_options options_0 = {.hidden = 0, .level = 1, .collapsed = 0};
-    col_options = {.hidden = 0, .level = 1, .collapsed = 1};
-    //lxw_row_col_options options_2 = {.hidden = 0, .level = 1, .collapsed = 2};
 
 }
 
@@ -145,7 +130,18 @@ void Txt2Xcel :: add_doc_properties(/*lxw_workbook *wb*/)
 
 }
 
+char* Txt2Xcel :: get_filename_timeStamp()
+{
+  time_t rawtime;
+  struct tm * timeinfo;
+  char *buffer;
 
+  time (&rawtime);
+  timeinfo = localtime (&rawtime);
+
+  strftime (buffer, 80 ,"%F_%T",timeinfo);
+  return buffer;
+}
 
 void Txt2Xcel :: write_excel_data(std::string _title, std::vector<std::vector<double>> _dataRowList)
 {
@@ -179,6 +175,33 @@ void Txt2Xcel :: write_excel_data(std::string _title, std::vector<std::vector<do
         worksheet_set_column_opt(worksheet, grpColStart, grpColEnd-2,  5, NULL, &col_options);
        }
         grpColStart+=tcc;grpColEnd+=tcc;processingFileId++;
+}
+
+void Txt2Xcel :: wx_mfx_2_mex()
+{
+    FileUtil::make_directory(dirPath);
+}
+
+void Txt2Xcel :: wx_of_2_ex()
+{
+    TxtReader txtRdr;
+    std::vector<std::vector<double>> dataRowList=txtRdr.parseTxt2Number_VECT(fileName, skipRowNo, cols, colSeparatorType);
+    int rowId=0, colId=0;
+
+    for(std::vector<double> dataCol : dataRowList)
+    {
+        for(int col=grpColStart; col<grpColEnd; col++)
+        {
+            std::cout<<"Rx: "<<rowId<<" Cx: "<<col<<" Cz: "<<colId<<" Dx: "<<dataCol[colId]<<" ";
+            worksheet_write_number(worksheet, rowId, col, dataCol[colId],  NULL);
+            colId++;
+        }
+        std::cout<<std::endl;
+        rowId++;colId=0;
+    }
+
+    workbook_close(workbook);
+
 }
 
 void Txt2Xcel :: wx_mfx_2_one_sx(/*std::string _file_name*/)
@@ -219,44 +242,6 @@ void Txt2Xcel :: wx_mfx_2_one_sx(/*std::string _file_name*/)
         ConsolePrint::print_txt_file_data_vect(max_col, dataList);
         write_excel_data(file_title_list[processingFileId-1], dataList);//txtRdr.parseTxt2Number_VECT(file_name,6,"1,2,3", 0));
     }
-
-    workbook_close(workbook);
-
-}
-
-void Txt2Xcel ::  txt_2_xcel(std::list<std::list<std::string>> data_list, std::vector<int> col_list)
-{
-    /*lxw_workbook  */workbook  = workbook_new("Txt2Xcel.xlsx");
-    /*lxw_worksheet */worksheet = workbook_add_worksheet(workbook, NULL);
-
-    add_doc_properties();
-    add_doc_cust_prop();
-
-         int max_cols=col_list.size(), row_id=0, col_id=0;
-         //std::cout<<"Col size : "<<max_cols<<std::endl;
-         //std::cout<<"Data size : "<<dataList.size()<<std::endl;
-
-        for(std::list<std::string> data : data_list)
-        {
-
-            for(std::string val : data)
-            {
-                /*for(int i=0; i<max_cols; i++)
-                {
-                    worksheet_write_string(worksheet, row_id, i, val.c_str(), NULL);
-                }*/
-                if(col_id==max_cols-1)
-                    col_id=0;
-                else
-                    col_id++;
-
-                worksheet_write_string(worksheet, row_id, col_id, val.c_str(), NULL);
-
-            }
-            row_id++;
-            //std::cout<<std::endl;
-        }
-        //std::cout<<"----------------------------"<<std::endl;
 
     workbook_close(workbook);
 
